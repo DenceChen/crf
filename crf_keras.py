@@ -23,7 +23,8 @@ class CRF(Layer):
     def log_norm_step(self, inputs, states):
         """递归计算归一化因子
         要点：1、递归计算；2、用logsumexp避免溢出。
-        技巧：通过expand_dims来对齐张量。
+        技巧：通过expand_dims来对齐张量。原本是先exp之后矩阵乘法运算的，为了防止溢出，可以先矩阵相加再做exp，
+        再做的exp使用logsumexp完成有效防止溢出
         """
         states = K.expand_dims(states[0], 2) # (batch_size, output_dim, 1)
         trans = K.expand_dims(self.trans, 0) # (1, output_dim, output_dim)
